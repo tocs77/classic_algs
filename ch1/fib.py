@@ -1,14 +1,11 @@
-import typing
-
-memo: typing.Dict[int, int] = {0: 0, 1: 1}
+from functools import lru_cache
 
 
+@lru_cache(maxsize=None)
 def fib(n: int) -> int:
-    if n in memo:
-        return memo[n]
-    res = fib(n-1)+fib(n-2)
-    memo[n] = res
-    return res
+    if n < 2:
+        return n
+    return fib(n-1)+fib(n-2)
 
 
 print(fib(50))
