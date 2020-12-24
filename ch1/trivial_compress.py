@@ -40,8 +40,7 @@ class CompressedGene:
 
 if __name__ == "__main__":
     import sys
-    #original: str = "TAGGGATTAACCGTTATATATATATAGCCATGGATCGATTATATAGGGATTAACCGTTATATATATATAGCCATGGATCGATTATA"*100
-    original: str = "ACGT"
+    original: str = "TAGGGATTAACCGTTATATATATATAGCCATGGATCGATTATATAGGGATTAACCGTTATATATATATAGCCATGGATCGATTATA"*100
     print("original is {} bytes".format(sys.getsizeof(original)))
     compressed: CompressedGene = CompressedGene(original)
     print("compressed is {} bytes".format(
