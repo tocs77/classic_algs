@@ -1,5 +1,6 @@
 from __future__ import annotations
 import typing
+import heapq
 
 T = typing.TypeVar('T')
 
@@ -102,6 +103,24 @@ class Queue(typing.Generic[T]):
         return repr(self._container)
 
 
+class PriorityQueue(typing.Generic[T]):
+    def __init__(self) -> None:
+        self._container: typing.List[T] = []
+
+    @property
+    def empty(self) -> bool:
+        return not self._container
+
+    def push(self, item: T) -> None:
+        heapq.heappush(self._container, item)
+
+    def pop(self) -> T:
+        return heapq.heappop(self._container)
+
+    def __repr__(self) -> str:
+        return repr(self._container)
+
+
 def dfs(initial: T, goal_test: typing.Callable[[T], bool],
         successors: typing.Callable[[T], typing.List[T]]) -> typing.Optional[Node[T]]:
     frontier: Stack[Node[T]] = Stack()
@@ -135,6 +154,27 @@ def bfs(initial: T, goal_test: typing.Callable[[T], bool],
                 continue
             explored.add(child)
             frontier.push(Node(child, current_node))
+    return None
+
+
+def astar(initial: T, goal_test: typing.Callable[[T], bool],
+          successors: typing.Callable[[T], typing.List[T]],
+          heuristic: typing.Callable[[T], float]) -> typing.Optional[Node[T]]:
+    frontier: PriorityQueue[Node[T]] = PriorityQueue()
+    frontier.push(Node(initial, None, 0.0, heuristic(initial)))
+    explored: typing.Dict[T, float] = {initial: 0.0}
+
+    while not frontier.empty:
+        current_node: Node[T] = frontier.pop()
+        current_state: T = current_node.state
+        if goal_test(current_state):
+            return current_node
+        for child in successors(current_state):
+            new_cost: float = current_node.cost+1
+            if child not in explored or explored[child] > new_cost:
+                explored[child] = new_cost
+                frontier.push(Node(child, current_node,
+                                   new_cost, heuristic(child)))
     return None
 
 

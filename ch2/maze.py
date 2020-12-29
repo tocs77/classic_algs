@@ -2,7 +2,7 @@ import enum
 import typing
 import random
 import math
-from generic_search import Node, dfs, bfs, node_to_path
+from generic_search import Node, dfs, bfs, node_to_path, astar
 
 
 class Cell(str, enum.Enum):
@@ -72,6 +72,22 @@ class Maze:
         self._grid[self.goal.row][self.goal.column] = Cell.GOAL
 
 
+def euclidian_distance(goal: MazeLocation) -> typing.Callable[[MazeLocation], float]:
+    def distance(ml: MazeLocation) -> float:
+        xdist: int = ml.column-goal.column
+        ydist: int = ml.row-goal.row
+        return math.sqrt((xdist*xdist)+(ydist*ydist))
+    return distance
+
+
+def manhattan_distance(goal: MazeLocation) -> typing.Callable[[MazeLocation], float]:
+    def distance(ml: MazeLocation) -> float:
+        xdist: int = abs(ml.column-goal.column)
+        ydist: int = abs(ml.row-goal.row)
+        return xdist+ydist
+    return distance
+
+
 if __name__ == "__main__":
     maze: Maze = Maze()
     print(maze)
@@ -84,6 +100,7 @@ if __name__ == "__main__":
         maze.mark(path1)
         print(maze)
         maze.clear(path1)
+
     print('\n\n')
     solution2: typing.Optional[Node[MazeLocation]] = bfs(
         maze.start, maze.goal_test, maze.successors)
@@ -94,3 +111,14 @@ if __name__ == "__main__":
         maze.mark(path2)
         print(maze)
         maze.clear(path2)
+
+    print('\n\n')
+    solution3: typing.Optional[Node[MazeLocation]] = astar(
+        maze.start, maze.goal_test, maze.successors, euclidian_distance(maze.goal))
+    if solution3 is None:
+        print("No solution found")
+    else:
+        path3: typing.List[MazeLocation] = node_to_path(solution3)
+        maze.mark(path3)
+        print(maze)
+        maze.clear(path3)
