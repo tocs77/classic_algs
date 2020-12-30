@@ -122,3 +122,14 @@ if __name__ == "__main__":
         maze.mark(path3)
         print(maze)
         maze.clear(path3)
+
+    print('\n\n')
+    solution4: typing.Optional[Node[MazeLocation]] = astar(
+        maze.start, maze.goal_test, maze.successors, manhattan_distance(maze.goal))
+    if solution4 is None:
+        print("No solution found")
+    else:
+        path4: typing.List[MazeLocation] = node_to_path(solution4)
+        maze.mark(path4)
+        print(maze)
+        maze.clear(path4)
