@@ -10,12 +10,12 @@ V = typing.TypeVar('V')  # graph vertix type
 
 class Graph(typing.Generic[V]):
     def __init__(self, verticles: typing.List[V] = []) -> None:
-        self._verticles: typing.List[V] = verticles
+        self._vertices: typing.List[V] = verticles
         self._edges: typing.List[typing.List[Edge]] = [[]for _ in verticles]
 
     @property
     def vertex_count(self) -> int:
-        return len(self._verticles)
+        return len(self._vertices)
 
     @property
     def edge_count(self) -> int:
@@ -23,7 +23,7 @@ class Graph(typing.Generic[V]):
 
     # add vertex to graph, return index
     def add_vertex(self, vertex: V) -> int:
-        self._verticles.append(vertex)
+        self._vertices.append(vertex)
         self._edges.append([])
         return self.vertex_count-1
 
@@ -37,17 +37,17 @@ class Graph(typing.Generic[V]):
         self.add_edge(edge)
 
     def add_edge_by_vertices(self, first: V, second: V) -> None:
-        u: int = self._verticles.index(first)
-        v: int = self._verticles.index(second)
+        u: int = self._vertices.index(first)
+        v: int = self._vertices.index(second)
         self.add_edge_by_indices(u, v)
 
     # serach vertex by index
     def vertex_at(self, index: int) -> V:
-        return self._verticles[index]
+        return self._vertices[index]
 
     # search vertex index by index
     def index_of(self, vertex: V) -> int:
-        return self._verticles.index(vertex)
+        return self._vertices.index(vertex)
 
     def neighbors_for_index(self, index: int) -> typing.List[V]:
         return list(map(self.vertex_at, [e.v for e in self._edges[index]]))
